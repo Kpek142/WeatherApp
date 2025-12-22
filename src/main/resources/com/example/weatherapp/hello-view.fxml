@@ -2,15 +2,18 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.VBox?>
 
-<?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.example.weatherapp.HelloController">
+<VBox prefHeight="450.0" prefWidth="400.0" spacing="10.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.weatherapp.WeatherController">
     <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
-
-    <Label fx:id="welcomeText"/>
-    <Button text="Hello!" onAction="#onHelloButtonClick"/>
+    <children>
+        <Label text="Поиск погоды:" />
+        <TextField fx:id="searchField" promptText="Введите название города..." />
+        <ListView fx:id="suggestionsList" managed="false" prefHeight="120.0" visible="false" />
+        <Label fx:id="weatherInfo" style="-fx-font-size: 16px; -fx-padding: 20px 0 0 0;" text="Введите город, чтобы узнать погоду" wrapText="true" />
+    </children>
 </VBox>
