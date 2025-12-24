@@ -12,8 +12,6 @@
 <?import javafx.scene.effect.Lighting?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
-<?import javafx.scene.paint.RadialGradient?>
-<?import javafx.scene.paint.Stop?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
@@ -58,31 +56,10 @@
             <Font name="Impact" size="12.0" />
          </font></TextField>
         <ListView fx:id="suggestionsList" blendMode="GREEN" depthTest="ENABLE" managed="true" prefHeight="120.0" visible="true" />
-            <Label fx:id="weatherInfo" accessibleRole="HYPERLINK" alignment="TOP_RIGHT" text="ЖДЕМ ДАННЫЕ..." wrapText="true">
+            <Label fx:id="weatherInfo" accessibleRole="HYPERLINK" alignment="TOP_RIGHT" text="ЖДЕМ ДАННЫЕ..." textFill="#096ced" wrapText="true">
             <font>
                 <Font name="System Bold Italic" size="20.0" />
             </font>
-         <textFill>
-            <RadialGradient centerX="0.7699115213039702" cycleMethod="REPEAT" focusAngle="-26.57" focusDistance="0.27522935779816526" radius="0.10550460246724819">
-               <stops>
-                  <Stop>
-                     <color>
-                        <Color green="0.050469543784856796" blue="0.9700000286102295" />
-                     </color>
-                  </Stop>
-                  <Stop offset="0.006729475100942127">
-                     <color>
-                        <Color green="0.050469543784856796" blue="0.9700000286102295" />
-                     </color>
-                  </Stop>
-                  <Stop offset="1.0">
-                     <color>
-                        <Color red="1.0" green="1.0" blue="1.0" />
-                     </color>
-                  </Stop>
-               </stops>
-            </RadialGradient>
-         </textFill>
          <cursor>
             <Cursor fx:constant="MOVE" />
          </cursor>
