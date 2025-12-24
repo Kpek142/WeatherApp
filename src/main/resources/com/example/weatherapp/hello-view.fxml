@@ -60,12 +60,6 @@
             <font>
                 <Font name="System Bold Italic" size="20.0" />
             </font>
-         <cursor>
-            <Cursor fx:constant="MOVE" />
-         </cursor>
-         <effect>
-            <Glow />
-         </effect>
         </Label>
     </children>
 </VBox>
