@@ -1,19 +1,94 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.BoxBlur?>
+<?import javafx.scene.effect.ColorAdjust?>
+<?import javafx.scene.effect.Glow?>
+<?import javafx.scene.effect.Light.Distant?>
+<?import javafx.scene.effect.Lighting?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.RadialGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<VBox prefHeight="450.0" prefWidth="400.0" spacing="10.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.weatherapp.WeatherController">
+<VBox fx:id="rootPane" prefHeight="681.0" prefWidth="730.0" spacing="15.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.weatherapp.WeatherController">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
     <children>
-        <Label text="Поиск погоды:" />
-        <TextField fx:id="searchField" promptText="Введите название города..." />
-        <ListView fx:id="suggestionsList" managed="false" prefHeight="120.0" visible="false" />
-        <Label fx:id="weatherInfo" style="-fx-font-size: 16px; -fx-padding: 20px 0 0 0;" text="Введите город, чтобы узнать погоду" wrapText="true" />
+      <Text fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" text="WeatherApp " textAlignment="CENTER" wrappingWidth="720.0">
+         <font>
+            <Font name="Depres" size="48.0" />
+         </font>
+      </Text>
+        <Label fx:id="labelTitle" text="КИСЛОТНАЯ ПОГОДА:" textFill="#08ff00">
+            <font>
+                <Font name="Wingdings" size="18.0" />
+            </font>
+        </Label>
+        <TextField fx:id="searchField" promptText="Ваше место смерти...">
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <effect>
+            <Lighting diffuseConstant="2.0" specularConstant="0.0" specularExponent="0.0" surfaceScale="10.0">
+               <light>
+                  <Light.Distant>
+                     <color>
+                        <Color red="0.28070175647735596" green="0.8421052694320679" blue="0.14035087823867798" />
+                     </color>
+                  </Light.Distant>
+               </light>
+               <bumpInput>
+                  <BoxBlur height="37.75" width="23.72">
+                     <input>
+                        <ColorAdjust />
+                     </input>
+                  </BoxBlur>
+               </bumpInput>
+            </Lighting>
+         </effect>
+         <font>
+            <Font name="Impact" size="12.0" />
+         </font></TextField>
+        <ListView fx:id="suggestionsList" blendMode="GREEN" depthTest="ENABLE" managed="true" prefHeight="120.0" visible="true" />
+            <Label fx:id="weatherInfo" accessibleRole="HYPERLINK" alignment="TOP_RIGHT" text="ЖДЕМ ДАННЫЕ..." wrapText="true">
+            <font>
+                <Font name="System Bold Italic" size="20.0" />
+            </font>
+         <textFill>
+            <RadialGradient centerX="0.7699115213039702" cycleMethod="REPEAT" focusAngle="-26.57" focusDistance="0.27522935779816526" radius="0.10550460246724819">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color green="0.050469543784856796" blue="0.9700000286102295" />
+                     </color>
+                  </Stop>
+                  <Stop offset="0.006729475100942127">
+                     <color>
+                        <Color green="0.050469543784856796" blue="0.9700000286102295" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="1.0" green="1.0" blue="1.0" />
+                     </color>
+                  </Stop>
+               </stops>
+            </RadialGradient>
+         </textFill>
+         <cursor>
+            <Cursor fx:constant="MOVE" />
+         </cursor>
+         <effect>
+            <Glow />
+         </effect>
+        </Label>
     </children>
 </VBox>
