@@ -4,59 +4,26 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.effect.BoxBlur?>
-<?import javafx.scene.effect.ColorAdjust?>
-<?import javafx.scene.effect.Light.Distant?>
-<?import javafx.scene.effect.Lighting?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox fx:id="rootPane" prefHeight="681.0" prefWidth="730.0" spacing="15.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.weatherapp.WeatherController">
+<VBox fx:id="rootPane" prefHeight="800.0" prefWidth="1410.0" spacing="15.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.weatherapp.WeatherController">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
     <children>
-      <Text fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" text="WeatherApp " textAlignment="CENTER" wrappingWidth="720.0">
-         <font>
-            <Font name="Depres" size="48.0" />
-         </font>
-      </Text>
-        <Label fx:id="labelTitle" text="КИСЛОТНАЯ ПОГОДА:" textFill="#08ff00">
+        <Text fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" text="WEATHER APP" textAlignment="CENTER" wrappingWidth="690.0">
             <font>
-                <Font name="Wingdings" size="18.0" />
+                <Font name="System Bold" size="48.0" />
             </font>
-        </Label>
-        <TextField fx:id="searchField" promptText="Ваше место смерти...">
-         <opaqueInsets>
-            <Insets />
-         </opaqueInsets>
-         <effect>
-            <Lighting diffuseConstant="2.0" specularConstant="0.0" specularExponent="0.0" surfaceScale="10.0">
-               <light>
-                  <Light.Distant>
-                     <color>
-                        <Color red="0.28070175647735596" green="0.8421052694320679" blue="0.14035087823867798" />
-                     </color>
-                  </Light.Distant>
-               </light>
-               <bumpInput>
-                  <BoxBlur height="37.75" width="23.72">
-                     <input>
-                        <ColorAdjust />
-                     </input>
-                  </BoxBlur>
-               </bumpInput>
-            </Lighting>
-         </effect>
-         <font>
-            <Font name="Impact" size="12.0" />
-         </font></TextField>
-        <ListView fx:id="suggestionsList" blendMode="GREEN" depthTest="ENABLE" managed="true" prefHeight="120.0" visible="true" />
-            <Label fx:id="weatherInfo" accessibleRole="HYPERLINK" alignment="TOP_CENTER" prefHeight="346.0" prefWidth="734.0" text="ЖДЕМ ДАННЫЕ..." textFill="#ff00d9" wrapText="true">
+        </Text>
+        <Label fx:id="labelTitle" text="КИСЛОТНАЯ ПОГОДА:" textFill="#08ff00" />
+        <TextField fx:id="searchField" promptText="Введите город..." />
+        <ListView fx:id="suggestionsList" prefHeight="120.0" visible="false" />
+        <Label fx:id="weatherInfo" alignment="TOP_LEFT" prefHeight="400.0" prefWidth="1625.0" text="ОЖИДАНИЕ ВЫБОРА..." wrapText="true">
             <font>
-                <Font name="Impact" size="32.0" />
+                <Font size="30.0" />
             </font>
         </Label>
     </children>

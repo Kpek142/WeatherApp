@@ -10,6 +10,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.text.Font;
 import javafx.util.Duration;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -25,9 +26,14 @@ public class WeatherController {
     private final HttpClient httpClient = HttpClient.newHttpClient();
     private JSONArray currentSuggestions;
     private final Random rand = new Random();
-
     private MediaPlayer mediaPlayer;
-    private final String[] playlist = {"femtanyl - DOGMATICA.mp3", "Genocide Organ & Prurient - The Holy Lance.mp3", "femtanyl - KATAMARI.mp3"};
+
+    // Твой плейлист
+    private final String[] playlist = {
+            "femtanyl - DOGMATICA.mp3",
+            "Genocide Organ & Prurient - The Holy Lance.mp3",
+            "femtanyl - KATAMARI.mp3"
+    };
 
     @FXML private VBox rootPane;
     @FXML private TextField searchField;
@@ -37,15 +43,25 @@ public class WeatherController {
 
     @FXML
     public void initialize() {
+        // ЗАГРУЗКА ШРИФТА
+        try {
+            Font customFont = Font.loadFont(getClass().getResourceAsStream("Depres.otf"), 20);
+            if (customFont != null) {
+                labelTitle.setFont(Font.font("Depres", 35));
+                weatherInfo.setFont(Font.font("Depres", 50));
+                searchField.setFont(Font.font("Depres", 15));
+            }
+        } catch (Exception e) {
+            System.err.println("Шрифт не найден!");
+        }
+
         startAcidMode();
         playRandomMusic();
 
         try {
             initDatabase();
             loadLastCity();
-        } catch (Exception e) {
-            System.err.println("Ошибка БД: " + e.getMessage());
-        }
+        } catch (Exception e) {}
 
         searchField.textProperty().addListener((obs, oldV, newV) -> {
             if (newV.length() > 2) fetchSuggestions(newV);
@@ -72,7 +88,7 @@ public class WeatherController {
             if (res != null) {
                 mediaPlayer = new MediaPlayer(new Media(res.toString()));
                 mediaPlayer.setOnEndOfMedia(this::playRandomMusic);
-                mediaPlayer.setVolume(0.3);
+                mediaPlayer.setVolume(0.4);
                 mediaPlayer.play();
             }
         } catch (Exception e) { System.out.println("Музыка не найдена"); }
@@ -84,7 +100,6 @@ public class WeatherController {
             rootPane.setBackground(new Background(new BackgroundFill(bg, CornerRadii.EMPTY, Insets.EMPTY)));
             Color txt = (bg.getBrightness() < 0.5) ? Color.WHITE : Color.BLACK;
             weatherInfo.setTextFill(txt);
-            if (labelTitle != null) labelTitle.setTextFill(txt);
         }));
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
@@ -92,7 +107,6 @@ public class WeatherController {
 
     private void getWeather(double lat, double lon, String city) {
         String url = String.format("https://api.openweathermap.org/data/2.5/weather?lat=%f&lon=%f&appid=%s&units=metric&lang=ru", lat, lon, API_KEY);
-
         httpClient.sendAsync(HttpRequest.newBuilder().uri(URI.create(url)).build(), HttpResponse.BodyHandlers.ofString())
                 .thenApply(HttpResponse::body)
                 .thenAccept(res -> Platform.runLater(() -> {
@@ -100,43 +114,28 @@ public class WeatherController {
                         JSONObject j = new JSONObject(res);
                         JSONObject m = j.getJSONObject("main");
                         JSONObject w = j.getJSONObject("wind");
-                        JSONObject c = j.getJSONObject("clouds");
                         String desc = j.getJSONArray("weather").getJSONObject(0).getString("description");
-
-                        // Сбор данных
-                        double temp = m.getDouble("temp");
-                        double feelsLike = m.getDouble("feels_like");
-                        double tMin = m.getDouble("temp_min");
-                        double tMax = m.getDouble("temp_max");
-                        int pressure = m.getInt("pressure");
-                        int humidity = m.getInt("humidity");
-                        double wSpeed = w.getDouble("speed");
-                        int wDeg = w.optInt("deg", 0);
-                        int cloudiness = c.getInt("all");
 
                         String report = String.format(
                                 "📍 %s\n" +
-                                        "-----------------------------------\n" +
-                                        "🌡 Температура: %.1f°C (ощущается как %.1f°C)\n" +
-                                        "📊 Мин: %.1f°C | Макс: %.1f°C\n" +
-                                        "💧 Влажность: %d%% | 📈 Давление: %d гПа\n" +
+                                        "🌡 Темп: %.1f°C (как %.1f°C)\n" +
+                                        "📊 Мин: %.1f | Макс: %.1f\n" +
+                                        "💧 Влажн: %d%% | 📈 Давл: %d\n" +
                                         "🧭 Ветер: %.1f м/с (%s)\n" +
-                                        "☁️ Облачность: %d%%\n" +
-                                        "📝 Осадки: %s",
-                                city.toUpperCase(), temp, feelsLike, tMin, tMax,
-                                humidity, pressure, wSpeed, getWindDirection(wDeg),
-                                cloudiness, desc.toUpperCase()
+                                        "📝 %s",
+                                city.toUpperCase(), m.getDouble("temp"), m.getDouble("feels_like"),
+                                m.getDouble("temp_min"), m.getDouble("temp_max"),
+                                m.getInt("humidity"), m.getInt("pressure"),
+                                w.getDouble("speed"), getDir(w.optInt("deg")), desc.toUpperCase()
                         );
                         weatherInfo.setText(report);
-                    } catch (Exception e) {
-                        weatherInfo.setText("ОШИБКА ПОЛУЧЕНИЯ ДАННЫХ");
-                    }
+                    } catch (Exception e) { weatherInfo.setText("ОШИБКА"); }
                 }));
     }
 
-    private String getWindDirection(int deg) {
-        String[] directions = {"СЕВЕРНЫЙ", "СЕВЕРО-ВОСТОЧНЫЙ", "ВОСТОЧНЫЙ", "ЮГО-ВОСТОЧНЫЙ", "ЮЖНЫЙ", "ЮГО-ЗАПАДНЫЙ", "ЗАПАДНЫЙ", "СЕВЕРО-ЗАПАДНЫЙ"};
-        return directions[(int) Math.round(((deg % 360) / 45.0)) % 8];
+    private String getDir(int deg) {
+        String[] dirs = {"С", "СВ", "В", "ЮВ", "Ю", "ЮЗ", "З", "СЗ"};
+        return dirs[(int) Math.round(((deg % 360) / 45.0)) % 8];
     }
 
     private void fetchSuggestions(String q) {
@@ -150,7 +149,7 @@ public class WeatherController {
                         for(int i=0; i<currentSuggestions.length(); i++)
                             suggestionsList.getItems().add(currentSuggestions.getJSONObject(i).getString("name"));
                         suggestionsList.setVisible(!suggestionsList.getItems().isEmpty());
-                    } catch (Exception e) { hideSuggestions(); }
+                    } catch (Exception e) {}
                 }));
     }
 
