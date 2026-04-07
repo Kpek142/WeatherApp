@@ -1,5 +1,6 @@
 package com.example.weatherapp;
 
+import java.util.Locale;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -101,8 +102,7 @@ public class WeatherController {
 
     // ТЕКУЩАЯ ПОГОДА (Пункт 5)
     private void getWeather(double lat, double lon, String city) {
-        String url = String.format("https://api.openweathermap.org/data/2.5/weather?lat=%f&lon=%f&appid=%s&units=metric&lang=ru", lat, lon, API_KEY);
-
+        String url = String.format(Locale.US, "https://api.openweathermap.org/data/2.5/weather?lat=%f&lon=%f&appid=%s&units=metric&lang=ru", lat, lon, API_KEY);
         httpClient.sendAsync(HttpRequest.newBuilder().uri(URI.create(url)).build(), HttpResponse.BodyHandlers.ofString())
                 .thenApply(HttpResponse::body)
                 .thenAccept(res -> Platform.runLater(() -> {
@@ -144,8 +144,7 @@ public class WeatherController {
 
     // ПРОГНОЗ НА 4 ДНЯ (Пункт 6)
     private void get4DayForecast(double lat, double lon) {
-        String url = String.format("https://api.openweathermap.org/data/2.5/forecast?lat=%f&lon=%f&appid=%s&units=metric&lang=ru", lat, lon, API_KEY);
-
+        String url = String.format(Locale.US, "https://api.openweathermap.org/data/2.5/forecast?lat=%f&lon=%f&appid=%s&units=metric&lang=ru", lat, lon, API_KEY);
         httpClient.sendAsync(HttpRequest.newBuilder().uri(URI.create(url)).build(), HttpResponse.BodyHandlers.ofString())
                 .thenApply(HttpResponse::body)
                 .thenAccept(res -> Platform.runLater(() -> {
@@ -207,7 +206,7 @@ public class WeatherController {
     }
 
     private void fetchSuggestions(String q) {
-        String url = "http://api.openweathermap.org/geo/1.0/direct?q=" + q.replace(" ", "%20") + "&limit=5&appid=" + API_KEY;
+        String url = String.format(Locale.US, "http://api.openweathermap.org/geo/1.0/direct?q=%s&limit=5&appid=%s", q.replace(" ", "%20"), API_KEY);
         httpClient.sendAsync(HttpRequest.newBuilder().uri(URI.create(url)).build(), HttpResponse.BodyHandlers.ofString())
                 .thenApply(HttpResponse::body)
                 .thenAccept(res -> Platform.runLater(() -> {
