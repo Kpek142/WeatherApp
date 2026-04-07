@@ -4,26 +4,49 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<VBox fx:id="rootPane" prefHeight="800.0" prefWidth="1410.0" spacing="15.0" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.weatherapp.WeatherController">
+<VBox fx:id="rootPane" prefHeight="800.0" prefWidth="1000.0" spacing="15.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.weatherapp.WeatherController">
     <padding>
         <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
     </padding>
     <children>
+        <!-- Заголовок приложения -->
         <Text fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" text="WEATHER APP" textAlignment="CENTER" wrappingWidth="690.0">
             <font>
                 <Font name="System Bold" size="48.0" />
             </font>
         </Text>
-        <Label fx:id="labelTitle" text="КИСЛОТНАЯ ПОГОДА:" textFill="#08ff00" />
-        <TextField fx:id="searchField" promptText="Введите город..." />
-        <ListView fx:id="suggestionsList" prefHeight="120.0" visible="false" />
-        <Label fx:id="weatherInfo" alignment="TOP_LEFT" prefHeight="400.0" prefWidth="1625.0" text="ОЖИДАНИЕ ВЫБОРА..." wrapText="true">
+
+        <Label fx:id="labelTitle" text="КИСЛОТНАЯ ПОГОДА:" textFill="#08ff00">
             <font>
-                <Font size="30.0" />
+                <Font size="24.0" />
+            </font>
+        </Label>
+
+        <!-- Поле поиска -->
+        <TextField fx:id="searchField" promptText="Введите город..." style="-fx-font-size: 16;" />
+
+        <!-- Список подсказок (выпадает при поиске) -->
+        <ListView fx:id="suggestionsList" prefHeight="100.0" visible="false" />
+
+        <!-- ИКОНКА ПОГОДЫ (Пункт 5) - Исправляет твой NullPointerException -->
+        <ImageView fx:id="weatherIcon" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
+
+        <!-- ОСНОВНАЯ ИНФОРМАЦИЯ О ПОГОДЕ -->
+        <Label fx:id="weatherInfo" alignment="TOP_LEFT" prefHeight="150.0" prefWidth="960.0" text="ОЖИДАНИЕ ВЫБОРА..." wrapText="true" textFill="WHITE">
+            <font>
+                <Font size="24.0" />
+            </font>
+        </Label>
+
+        <!-- ПРОГНОЗ НА 4 ДНЯ (Пункт 6) -->
+        <Label fx:id="forecastLabel" alignment="TOP_LEFT" prefHeight="250.0" prefWidth="960.0" text="Прогноз появится здесь..." wrapText="true" textFill="#00ffcc">
+            <font>
+                <Font name="Monospaced Regular" size="18.0" />
             </font>
         </Label>
     </children>
