@@ -5,6 +5,7 @@ module com.example.weatherapp {
     requires org.json;
     requires java.net.http;
     requires java.sql;
+    requires org.slf4j;
 
     opens com.example.weatherapp to javafx.fxml;
     exports com.example.weatherapp;
