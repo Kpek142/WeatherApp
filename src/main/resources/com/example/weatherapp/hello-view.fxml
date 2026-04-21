@@ -33,7 +33,7 @@
         <!-- Список подсказок (выпадает при поиске) -->
         <ListView fx:id="suggestionsList" prefHeight="100.0" visible="false" />
 
-        <!-- ИКОНКА ПОГОДЫ (Пункт 5) - Исправляет твой NullPointerException -->
+        <!-- ИКОНКА ПОГОДЫ (Пункт 5) -->
         <ImageView fx:id="weatherIcon" fitHeight="100.0" fitWidth="100.0" pickOnBounds="true" preserveRatio="true" />
 
         <!-- ОСНОВНАЯ ИНФОРМАЦИЯ О ПОГОДЕ -->
