@@ -19,6 +19,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.util.Duration;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -55,7 +57,6 @@ public class WeatherController {
     @FXML private Label forecastLabel;
     @FXML private ImageView weatherIcon;
 
-    // Поля для иконок прогноза
     @FXML private ImageView forecastIcon1;
     @FXML private ImageView forecastIcon2;
     @FXML private ImageView forecastIcon3;
@@ -80,7 +81,6 @@ public class WeatherController {
             else hideSuggestions();
         });
 
-        // Обработка нажатия Enter в поле поиска
         searchField.setOnAction(e -> {
             String query = searchField.getText().trim();
             if (!query.isEmpty()) {
@@ -95,38 +95,90 @@ public class WeatherController {
                 handleCitySelection(city);
             }
         });
+
+        // Настройка адаптивного размера шрифта для weatherInfo
+        setupResponsiveFont();
+    }
+
+    /**
+     * НАСТРОЙКА АДАПТИВНОГО ШРИФТА
+     * Автоматически уменьшает шрифт, если текст не помещается
+     */
+    private void setupResponsiveFont() {
+        // Привязываем размер шрифта к высоте контейнера
+        weatherInfo.sceneProperty().addListener((obs, oldScene, newScene) -> {
+            if (newScene != null) {
+                // Начальная настройка
+                adjustWeatherInfoFontSize();
+
+                // Слушатель изменения размера окна
+                newScene.heightProperty().addListener((o, oldVal, newVal) -> {
+                    adjustWeatherInfoFontSize();
+                });
+
+                newScene.widthProperty().addListener((o, oldVal, newVal) -> {
+                    adjustWeatherInfoFontSize();
+                });
+            }
+        });
+    }
+
+    /**
+     * АВТОМАТИЧЕСКАЯ ПОДГОНКА РАЗМЕРА ШРИФТА
+     */
+    private void adjustWeatherInfoFontSize() {
+        if (weatherInfo.getScene() != null) {
+            double windowHeight = weatherInfo.getScene().getHeight();
+            double windowWidth = weatherInfo.getScene().getWidth();
+
+            // Вычисляем оптимальный размер шрифта
+            double fontSize;
+            if (windowHeight < 600) {
+                fontSize = 12;
+            } else if (windowHeight < 700) {
+                fontSize = 14;
+            } else if (windowHeight < 800) {
+                fontSize = 16;
+            } else if (windowHeight < 900) {
+                fontSize = 18;
+            } else {
+                fontSize = 20;
+            }
+
+            // Дополнительно уменьшаем шрифт для узких окон
+            if (windowWidth < 800) {
+                fontSize = Math.max(11, fontSize - 4);
+            } else if (windowWidth < 1000) {
+                fontSize = Math.max(12, fontSize - 2);
+            }
+
+            weatherInfo.setStyle(String.format(
+                    "-fx-font-family: 'Depres'; -fx-font-size: %.0f; -fx-text-fill: white;",
+                    fontSize
+            ));
+        }
     }
 
     private void setupFonts() {
         try {
             Font.loadFont(getClass().getResourceAsStream("Depres.otf"), 20);
             labelTitle.setStyle("-fx-font-family: 'Depres'; -fx-font-size: 35;");
-            weatherInfo.setStyle("-fx-font-family: 'Depres'; -fx-font-size: 20;");
+            weatherInfo.setStyle("-fx-font-family: 'Depres'; -fx-font-size: 18; -fx-text-fill: white;");
             forecastLabel.setStyle("-fx-font-family: 'Depres'; -fx-font-size: 14;");
         } catch (Exception e) {
             logger.warn("Шрифт Depres.otf не найден");
         }
     }
 
-    /**
-     * ОБРАБОТКА ПОИСКОВОГО ЗАПРОСА ПРИ НАЖАТИИ ENTER
-     * Если город не найден - показывает сообщение об ошибке
-     */
     private void handleSearchQuery(String query) {
-        // Проверяем, есть ли подсказки
         if (currentSuggestions != null && currentSuggestions.length() > 0) {
-            // Если есть подсказки, выбираем первую
             JSONObject city = currentSuggestions.getJSONObject(0);
             handleCitySelection(city);
         } else {
-            // Если подсказок нет, пробуем найти город напрямую
             searchCityDirectly(query);
         }
     }
 
-    /**
-     * ПРЯМОЙ ПОИСК ГОРОДА (если нет подсказок)
-     */
     private void searchCityDirectly(String query) {
         String url = String.format(Locale.US,
                 "http://api.openweathermap.org/geo/1.0/direct?q=%s&limit=1&appid=%s",
@@ -138,11 +190,9 @@ public class WeatherController {
                     try {
                         JSONArray results = new JSONArray(res);
                         if (results.length() > 0) {
-                            // Город найден
                             JSONObject city = results.getJSONObject(0);
                             handleCitySelection(city);
                         } else {
-                            // Город не найден - показываем messageBox
                             showCityNotFoundMessage(query);
                         }
                     } catch (Exception e) {
@@ -152,9 +202,6 @@ public class WeatherController {
                 }));
     }
 
-    /**
-     * ПОКАЗ СООБЩЕНИЯ "ГОРОД НЕ НАЙДЕН"
-     */
     private void showCityNotFoundMessage(String cityName) {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         alert.setTitle("🏙️ Город не найден");
@@ -169,10 +216,6 @@ public class WeatherController {
                 cityName
         ));
 
-        // Добавляем кастомную иконку (по желанию)
-        // alert.setGraphic(new ImageView(new Image("file:warning_icon.png")));
-
-        // Настраиваем стиль для кислотного режима
         DialogPane dialogPane = alert.getDialogPane();
         dialogPane.setStyle(
                 "-fx-background-color: #1a1a2e;" +
@@ -186,7 +229,6 @@ public class WeatherController {
 
         alert.showAndWait();
 
-        // Очищаем поле поиска и даем фокус
         searchField.clear();
         searchField.requestFocus();
 
@@ -251,12 +293,13 @@ public class WeatherController {
                                     double todayMin = minMax[0];
                                     double todayMax = minMax[1];
 
+                                    // Компактный формат для лучшего отображения
                                     String report = String.format(
                                             "📍 %s\n" +
-                                                    "🌡 Темп: %.1f°C (как %.1f°C)\n" +
+                                                    "🌡 %.1f°C (ощущается как %.1f°C)\n" +
                                                     "⬇ Мин: %.1f°C | ⬆ Макс: %.1f°C\n" +
-                                                    "💧 Влажн: %d%% | 📈 Давл: %d\n" +
-                                                    "🧭 Ветер: %.1f м/с (%s)\n" +
+                                                    "💧 Влажность: %d%% | 📈 Давление: %d гПа\n" +
+                                                    "🧭 Ветер: %.1f м/с, %s\n" +
                                                     "📝 %s",
                                             city.toUpperCase(),
                                             m.getDouble("temp"),
@@ -270,6 +313,9 @@ public class WeatherController {
                                             desc.toUpperCase()
                                     );
                                     weatherInfo.setText(report);
+
+                                    // Подгоняем размер шрифта
+                                    adjustWeatherInfoFontSize();
 
                                     get4DayForecast(lat, lon);
 
@@ -373,7 +419,7 @@ public class WeatherController {
                             }
                             if (forecastDays.size() < 4) {
                                 forecastDays.add(entry.getValue());
-                                sb.append(String.format("%s -> ср: %.1f°C (мин: %.1f°C, макс: %.1f°C) | %s\n",
+                                sb.append(String.format("%s → 🌡%.1f°C (мин:%.1f°C, макс:%.1f°C) | %s\n",
                                         entry.getKey(),
                                         entry.getValue().getAvgTemp(),
                                         entry.getValue().getMinTemp(),
@@ -472,7 +518,6 @@ public class WeatherController {
         alert.setHeaderText("Произошла ошибка");
         alert.setContentText(message);
 
-        // Стилизация для кислотного режима
         DialogPane dialogPane = alert.getDialogPane();
         dialogPane.setStyle(
                 "-fx-background-color: #1a1a2e;" +
@@ -522,7 +567,6 @@ public class WeatherController {
                         suggestionsList.getItems().clear();
 
                         if (currentSuggestions.length() == 0) {
-                            // Если подсказок нет, но пользователь что-то ввел
                             suggestionsList.setVisible(false);
                         } else {
                             for(int i = 0; i < currentSuggestions.length(); i++) {
