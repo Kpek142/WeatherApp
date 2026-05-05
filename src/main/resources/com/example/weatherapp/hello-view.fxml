@@ -5,6 +5,7 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
@@ -43,7 +44,59 @@
             </font>
         </Label>
 
-        <!-- ПРОГНОЗ НА 4 ДНЯ (Пункт 6) -->
+        <!-- ЗАГОЛОВОК ПРОГНОЗА -->
+        <Label text="ПРОГНОЗ НА 4 ДНЯ:" textFill="#ffcc00">
+            <font>
+                <Font name="System Bold" size="20.0" />
+            </font>
+        </Label>
+
+        <!-- ИКОНКИ ПРОГНОЗА НА 4 ДНЯ -->
+        <HBox alignment="CENTER" spacing="30.0">
+            <children>
+                <VBox alignment="CENTER" spacing="5.0">
+                    <ImageView fx:id="forecastIcon1" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                    <Label text="День 1" textFill="#00ffcc">
+                        <font>
+                            <Font size="12.0" />
+                        </font>
+                    </Label>
+                </VBox>
+
+                <VBox alignment="CENTER" spacing="5.0">
+                    <ImageView fx:id="forecastIcon2" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                    <Label text="День 2" textFill="#00ffcc">
+                        <font>
+                            <Font size="12.0" />
+                        </font>
+                    </Label>
+                </VBox>
+
+                <VBox alignment="CENTER" spacing="5.0">
+                    <ImageView fx:id="forecastIcon3" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                    <Label text="День 3" textFill="#00ffcc">
+                        <font>
+                            <Font size="12.0" />
+                        </font>
+                    </Label>
+                </VBox>
+
+                <VBox alignment="CENTER" spacing="5.0">
+                    <ImageView fx:id="forecastIcon4" fitHeight="64.0" fitWidth="64.0" pickOnBounds="true" preserveRatio="true" />
+                    <Label text="День 4" textFill="#00ffcc">
+                        <font>
+                            <Font size="12.0" />
+                        </font>
+                    </Label>
+                </VBox>
+            </children>
+
+            <padding>
+                <Insets bottom="10.0" top="10.0" />
+            </padding>
+        </HBox>
+
+        <!-- ПРОГНОЗ НА 4 ДНЯ (текстовая информация) -->
         <Label fx:id="forecastLabel" alignment="TOP_LEFT" prefHeight="250.0" prefWidth="960.0" text="Прогноз появится здесь..." wrapText="true" textFill="#00ffcc">
             <font>
                 <Font name="Monospaced Regular" size="18.0" />
